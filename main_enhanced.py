@@ -97,6 +97,7 @@ async def health():
 
 @app.get("/ranking", response_model=RankingResponse)
 async def ranking(top: int = 100):
+    top = max(1, min(top, 1000))  # clamp to keep a single read cheap
     rows = await cache.top(top)
     return RankingResponse(rows=rows, served_from="cache")
 
